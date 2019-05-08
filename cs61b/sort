@@ -1,0 +1,65 @@
+##Sort
+``` java
+import java.util.Comparator;
+
+public class LengthComparator implements Comparator<String> {
+
+    public int compare(String x, String y) {
+        return x.length() - y.length();
+    }
+}
+```
+*Inversion*: The number of pairs of elements in a sequence that are out of order. An array with no inversions is ordered.
+
+####classification
+
+* Selection Sort
+* Heap Sort
+* Merge Sort
+* Insertion Sort
+
+| | Best Case Runtime| Worst Case Runtime| Space|
+|-|------------------|-------------------|------|
+|Selection Sort| $\Theta(N^2)$| $\Theta(N^2)$| $\Theta(1)$|
+|Heap Sort| $\Theta(N)^{*}$ | $\Theta(N log {N})$| $\Theta(1)$|
+|Merge Sort| $\Theta(N log{N})$| $\Theta(N log{N})$| $\Theta(N)$|
+|Insertion Sort| $\Theta(N)$| $\Theta(N^{2})$| $\Theta(1)$|
+
+####Selection Sort
+* *Main Idea*: Find the minimum of unsorted portion and move it to the left.
+* *Runtime*: $\Theta(N^2)$
+* *Space*: $\Theta(1)$ (Addtional space needed except for the storage of original input.)
+
+####Heap Sort
+* **Naive Heap Sort**
+  * *Main Idea*: Put everthing into a **max_heap**, repeat taking the maximum from the heap and putting it in the right most empty place of output.
+  * *Runtime*: $\Theta(N log{N})$ while $\Theta(N)^{*}$ for the best case.`WHY?`
+  * *Space*: $\Theta(N)$ to build an additional copy for the data.
+* **In-place Heap Sort**
+  * *Main Idea*: Instead of making another copy, turn the orignial one into a max_heap directly to save memory.
+  * *How*: Sink nodes in the reverse level order.
+    &emsp;&emsp;&ensp;If you have two sub-heap and an arbitray value at the top, when you sink that value, the overall result will be a heap.
+  *  *Runtime*: The same with Naive Heap Sort.
+  *  *Space*: $\Theta(1)$
+
+&emsp;**Import**: If you replece max_heap with min_heap, that won't work. `WHY?`
+
+####Merge Sort
+* *Main Idea*: TOP-DOWN split items into 2 roughly even pieces, mergesort each half.
+* *Runtime*: $\Theta(N log{N})$
+* *Space*: $\Theta(N)$
+
+####Insertion Sort
+* **Naive Insertion Sort**
+  * *Main Idea*: Start with an empty output and insert each item from input into output at right place.
+  * *Runtime*: $\Theta(N log{N})$
+  * *Space*: $\Theta(N)$
+
+* **In-place Insertion Sort**
+  * *Main Idea*: Pick each item form the unsorted portion and swap the travelling item backwards until the traveller is in the right place among all previously examined items.
+  * *Runtime*: The same with Naive Insertion Sort.
+  * *Space*: $\Theta(1)$
+
+&emsp;**Import**:
+&emsp;&emsp; - On arrays with a small number of inversions, insertion sort is extremely fast. Runtime is $\Theta(N+K)$ where $K$ is the number of inversions.
+&emsp;&emsp; - For small arrays(N<15), insertion sort is fast.

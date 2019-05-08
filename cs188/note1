@@ -1,0 +1,121 @@
+###SEARCH
+####Agents
+- Rational Agents: an entity that has goals or preferences and
+tries to perform a series of actions that yield the best/optimal
+expected outcome given these goals
+-  Reflex Agent: an entity that doesn't think about the consequences
+ of its actions, but rather selects an action based solely on the current state
+of the world
+
+####State Spaces and Search Problems
+To formulating a *Search Problem*:
+- a *state space*: the set of all possible states
+- a *successor function*: a function that takes in a state and an action and
+computes the cost of the performing that action as well as the successor states
+- a *start state*
+- a *goal test*
+
+**word state & search state**: world state contains all information about a given
+state, whereas a search state contains only the information that's necessary
+for planning.
+
+**search graph & search tree**: in a state space graph, a node is represented
+exactly once, whereas there is no such restriction on the number of times
+a state can appear in search tree.
+
+
+```java
+function Tree_Search (problem, fringe) return a solution, or failure
+  fringe <- INSERT(MAKE_NODE(INITIAL_STATE[problem]), fringe)
+  loop do:
+    if fringe is empty then return failure
+    node <- RENOVE_FRONT(fringe)
+    if GOAL_TEST(problem, STATE[node]) then return node
+    for child_node in EXPAND(STATE[node], problem) do
+      fringe <- INSERT(child_node, fringe)
+    end
+  end
+```
+```java
+function GRAPH-SEARCH(problem, fringe) return a solution, or failure
+  closed <- an empty set
+  fringe <- INSERT(MAKE-NODE(INITIAL_STATE[problem]), fringe)
+  loop do
+    if fringe is empty then return failure
+    node <- REMOVE_FRONT(fringe)
+    if GOAL_TEST(problem, state[node]) then return node
+    if STATE[node] is not in closed then
+      add STATE[node] to closed
+      for child_node in EXPAND(STATE[node], problem) do
+        fringe <- INSERT(child_node, fringe)
+      end
+  end
+```
+####Uniformed Search
+
+Rudimentary properties:
+- *completeness*: if there exits a solution, is the strategy guaranteed to find it
+- *optimality*: is the strategy guaranteed to find the optimal result
+- **branching factor b**: the increasing in the number of nodes on the fringe each
+time a fringe node is dequeued and replace with its children is $O(b)$.
+- the maximum depth m
+- the depth of the shallowest solution s
+
+######Depth-First Search
+- always selects the deepest fringe node from start node for expansion
+- first-in, last-out based stack
+- **not complete** if there exist cycles in the state space graph
+- not optimal
+- time complexity: $O(b^m)$
+- space complexity: $O(bm)$ In the worst case, DFS maintains $b$ nodes at each
+of $m$ depth levels on the fringe
+
+######Breadth-First Search
+- always selects the shallowest fringe node
+- first-in, first-out based queue
+- complete but not optimal
+- time complexity: $O(b^s)$ We must search $1 + b + b^2 + \dots + b^s$ in the
+worst case.
+- space complexity: $O(b^s)$ The fringe, in the worst case, contains all the nodes
+in the level corresponding to the shallowest solution
+
+######Uniform Cost Search
+- always selects the lowest cost fringe node
+- heap-based priority queue
+- complete
+- optimal if all edges are **nonnegative**
+  **chief difference between Dijkstra**: UCS terminates upon finding a solution
+  state instead of finding the path to all states
+- time complexity: $O(b ^ {C ^ {*} / \varepsilon})$ let us define the optimal cost as $C^*$ and the minimum cost
+between two nodes in the state space graph as $\varepsilon$.
+- space complexity: $O(b ^ {C ^ {*} / \varepsilon})$ the fringe will contain
+all nodes at the level of the cheapest solution
+
+####Informed Search
+**Heuristics**: functions that take in a state as input and output a corresponding
+estimate to goal states
+- **Admissibility**: the value estimated by an admissible heuristic is neither
+negative nor an overestimate.
+- **Consistency**: $\forall A, C \quad h(A) - h(C) \leq cost(A, C)$
+  better consistency: $\forall n, h_a(n) \geq h_b(n)$
+  &emsp; The standard metric for this is that of dominance. If heuristic a is
+  dominant over heuristic $b$, then the estimated goal distance for $a$ is greater than
+   the estimated goal distance for $b$ for every node in the state space graph.
+
+
+
+######Greedy Search
+- always selects the fringe node with the lowest heuristic value
+- compare with UCS: UCS uses computed backward cost, whereas Greedy Search uses
+estimated forward cost
+- not complete and not optimal
+
+######$A^*$ Search
+- always selects the fringe node with the lowest estimated total cost
+- complete and optimal
+- **Theorem**: For a given search problem, if the admissibility constraint is
+satisfied by a heuristic function $h$, using $A^*$ tree search with h on that search
+problem will yield an optimal solution.  `WHY?`
+- **Theorem**: For a given search problem, if the consistency constraint is
+satisfied by a heuristic function $h$, using $A^*$ graph search with h on that
+search problem will yield an optimal solution.

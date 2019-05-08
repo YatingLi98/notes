@@ -1,0 +1,69 @@
+###GAME
+####deterministic zero-sum games:
+actions are deterministic and our gain is directly equivalent to our opponent's
+loss and vice versa.
+
+####Minimax
+Minimax runs under the motivating assumption that the opponent we face behaves
+optimally, and will always perform the move that is worst for us.
+$$\forall \text{agent-controlled states,} V(s) =
+\max \limits _{s ^{\prime} \in successors(s)} V(s ^{\prime})$$
+
+$$\forall \text{opponent-controlled states,} V(s) =
+\min \limits _{s ^{\prime} \in successors(s)} V(s ^{\prime})$$
+
+$$\forall \text{terminal states,} V(s) = \text{known}$$
+
+```python
+def value(state):
+  if the state is a terminal state: return the state's utility
+  if the next agent is MAX: return max-value(state)
+  if the next agent is MIN: return min-value(state)
+
+def max-value(state):
+  initialize v = -infinity
+  for each successor of state:
+    v = max(v, value(successor))
+  return v
+
+def min-value(state):
+  initialize v = +infinity
+  for each successor of state:
+    v = min(v, value(successor))
+  return v
+```
+####Alpha-Beta Pruning ``need more Practice``
+$\alpha$: MAX's best option on the path to root
+$\beta$: MIN's best option on the path to root
+```python
+def max-value(state, a, b):
+  initialize v = -infinity
+  for each successor of state:
+    v = max(v, value(successor, a, b))
+    if v >= b return v
+    a = max(a, v)
+  return v
+
+def min-value(state, a, b):
+  initialize v = +infinity
+  for each successor of state:
+    v = min(v, value(successor, a, b))
+    if v <= b return v
+    b = min(b, v)
+  return v
+```
+
+####Expectimax
+$$\forall \text{agent-controlled states,} V(s) =
+\max \limits _{s^{\prime} \in successors(s)} V(s^{\prime})$$
+$$\forall \text{chance states,} V(s) =
+\sum \limits _{s^{\prime} \in successors(s)} p(s^{\prime} | s) V(s^{\prime})$$
+$$\forall \text{terminal states,} V(s) = \text{known}$$
+
+####Utilities
+A **lottery** is a situation with different prizes resulting with different
+ probabilities.
+ - **risk-neutral**: be indifferent between participating in the lottery and
+ receiving the flat payment
+ - **risk-averse**: prefer the flat payment to the lottery
+ - **risk-seeking**: prefer the lottery to the flat payment
