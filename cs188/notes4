@@ -1,0 +1,83 @@
+###Reinforcement Learning
+Markov decision processes is an example of **offline planning**, whereas
+reinforcement learning is an example of **online planning**.
+
+####Model-Based Learning
+Model- based learning attempts to estimate the transition and reward functions
+with the samples attained during exploration before using these estimates to
+solve the MDP normally with value or policy iteration.
+- Keep counts of the number of times it arrives in each state $s^{\prime}$ after
+entering each q-state $(s, a)$.
+- Normalize the counts.
+
+####Model-Free Learning
+- **Passive Reinforcement Learning**: an agent is given a policy to follow and
+ learns the value of states under that policy as it experiences episodes.
+- **Active Reinforcement Learning**: the learning agent can use the feedback it
+ receives to iteratively update its policy while learning until eventually
+ determining the optimal policy after sufficient exploration.
+
+#####Direct Evaluation (passive)
+Let an agent run a fixed policy $\pi$ for several episodes and maintains counts
+of the total utility obtained from each state and the number of times it
+visited each state.
+$$V^{\pi} (s) = \frac{\text{total reward}}{\text{times visited}}$$
+It's often unnecessarily slow to converge because it wastes the information about
+transition between states.
+
+#####Temporal Difference Learning (passive)
+Value iteration: $V^{\pi}_{k+1}(s) = \sum \limits _{s^{\prime}} T(s, \pi(s), s^{\prime})
+[R(s, \pi(s), s^{\prime}) + \gamma V^{\pi}_{k}(s^{\prime})]$
+$$sample = R(s, \pi(s), s^{\prime}) + \gamma V^{\pi}(s^{\prime})$$
+$$V^{\pi}_{k}(s) \leftarrow (1 - \alpha) V^{\pi} _{k-1}(s) + \alpha \centerdot sample_{k}$$
+
+- Learn at each timestep
+- Give exponentially less weight to older potentially less accuracy samples
+- Converge faster than direct evaluation
+
+#####Q-Learning
+For direct learning and TD learning, the finding of optimal policy requires
+knowledge of the q-values of states. To compute q-values from the values we
+have, we require a transition function and reward function as dictated by the
+Bellman equation.
+Using **q-value iteration** is model free, which proposes learning q-values of
+state directly:
+$$Q_{k+1} (s,a) \leftarrow \sum \limits _{s^{\prime}} T(s, a, s^{\prime})
+[R(s, a, s^{\prime}) + \gamma \max \limits _{a^{\prime}} Q_{k}(s^{\prime}, a^[\prime])]$$
+$$sample = R(s, a, s^{\prime}) + \gamma \max \limits _{a^{\prime}} Q(s^{\prime}, a^{\prime})$$
+$$Q(s, a) \leftarrow (1 - \alpha) Q(s, a) + \alpha \centerdot sample$$
+As long as we spend enough time in exploration and decrease the learning rate
+$\alpha$ at an appropriate pace, Q-learning learns the optimal q-values for
+every q-state.
+
+#####Approximate Q-Learning
+Generalizing learning experiences by applying **feature-based representation** of
+states, which represents each state as a vector as a *feature vector*.
+$$difference  = [R(s, a, s^{\prime}) + \gamma \max \limits _{a^{\prime}}
+Q(s^{\prime}, a^{\prime})] - Q(s, a)$$
+$$w_{i} \leftarrow w_{i} + \alpha \centerdot difference \centerdot f_{i}(s, a)$$
+where $\vec{f}(s) = [f_1(s) \quad f_2(s) \quad \dots f_n(s)]^{T}$ and
+$\vec{f}(s, a) = [f_1(s, a) \quad f_2(s, a) \quad \dots f_n(s, a)]^{T}$ represents
+the feature vectors for state $s$ and q-state $(s, a)$ respectively and $\vec{w}
+= [w_{1} \quad w_{2} \quad \dots w_{n}]$ represents a weight vector.
+$$Q(s, a) \leftarrow Q(s, a) + \alpha \centerdot difference$$
+
+####Exploration and Exploitation
+
+#####$\mathcal{E}$ - Greedy Policies
+Agents following an $\mathcal{E}$-greedy policy define some probability
+$0 \leq \mathcal{E} \leq 1$, and act randomly and explore with probability
+$\mathcal{E}$.
+$\mathcal{E}$: too large $\rightarrow$ act randomly even find the optimal
+&emsp; too small $\rightarrow$ learn very slowly
+To get around this, $\mathcal{E}$ must be manually tuned and lowered over time to
+see results
+
+#####Exploration Functions
+Avoiding manually tuned %\mathcal{E}$ by using a modified q-value iteration update
+to give some preference to visiting less-visited states.
+$$Q(s, a) \leftarrow (1 - \alpha) Q(s, a) + \alpha \centerdot
+[R(s, a, s^{\prime}) + \gamma \max \limits _{a^{\prime}} f(s^{\prime}, a^{\prime})]$$
+$$f(s, a) = Q(s, a) + \frac{k}{N(s, a)}$$
+$f$ denotes an exploration where $k$ is some predetermined value , and $N(s, a)$
+denoting the number of times q-states $(s, a)$ has been visited.
