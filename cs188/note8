@@ -1,0 +1,62 @@
+###Markov Models
+
+####Mini-Forward Algorithm
+$$Pr(W_{i+1} = \sum _{w_{i}} Pr(W_{i+1}|w_{i}) Pr(w_{i}))$$
+
+*Stationary Distribution*: $Pr(W_{t+1}) = Pr(W_{t})$
+
+####Hidden Markov Models
+Assume *transition model* $Pr(W_{i+1}| W_{i})$ and *sensor model* $Pr(F_{i}| W_{i})$ are
+both stationary.
+**Belief distribution** at time $i$ with all evidence $F_{1}, \dots, F_{i}$ observed
+ up to date:
+ $$B(W_{i}) = Pr(W_{i}| f_{1}, \dots, f_{i}) = Pr(W_{i}| f_{1: i})$$
+ $$B^{\prime}(W_{i+1}) = Pr(W_{i+1}| f_{1:i}) = \sum_{w_{i}} Pr(W_{i+1}, w_{i}| f_{1:i})$$
+ $$\boxed {B^{\prime}(W_{i+1}) = \sum _{w_{i}} Pr(W_{i+1}| w_{i}) B(w_{i})}$$
+$$
+\begin{align}
+B(W_{i+1}) & = Pr(W_{i+1}| f_{1}, \dots, f_{n}) = \frac{Pr(W_{i+1}, f_{i+1}|
+f_{1}, \dots, f_{i})}{Pr(f_{i+1}| f_{1}, \dots, f_{i})} \\
+& \propto Pr(W_{i+1}, f_{i+1}|
+f_{1}, \dots, f_{i})\\
+& \propto Pr(f_{i+1}| W_{i+1}, f_{1}, \dots, f_{i}) Pr(W_{i+1}| f_{1}, \dots, f_{i})\\
+& \propto \boxed {Pr(f_{i+1}| W_{i+1}) B^{\prime} (W_{i+1})} \quad \text{Forward Algorithm}
+\end{align}
+$$
+
+####Viterbi Algorithm
+**Goal**: What is the most likely sequence of hidden states the system followed
+given the observed evidence variables so far?
+$$\arg \max _{x_{1:N}} P(x_{1:N}|e_{1:n}) = \arg \max _{x_{1:N}} P(x_{1:N}, e_{1:n})$$
+
+Define $m_{t}[x_{t}] = \max _{x_{1: t-1}} P(x_{1: t}, e_{1: t})$
+$$
+\begin{align}
+m_{t}[x_{t}] &= \max _{1: t-1} P(x_{1: t-1}, e_{1:t-1}) P(x_{t}| x_{t-1}) P(e_{t}| x_{t})\\
+&= P(e_{t}| x_{t}) \max _{x_{t-1}} P(x_{t}| x_{t-1}) m_{t-1}[x_{t-1}]
+\end{align}
+$$
+``WHY``
+Define $a_{t} = \arg \max _{x_{t-1}} P(x_{t}| x_{t-1} )m_{t-1}[x_t-1]$
+```python
+for t in range(1, N+1):
+  for x_t in X:
+    if t == 1:
+      m_t[x_t] = P(x_t)P(e_0|x_t)
+    else:
+      calculate a_t[x_t], the most possible x_(t-1)
+      calculate m_t[x-t]
+x_opt[n] = x_N with the maximum value of m_N[x_N]
+for t = N to 2 do
+  x_opt[t-1] = a_t[x_opt[t]]
+```
+
+####Particle Filtering
+- Initial particles to form some initial distribution
+- *Time Elapse Update*: sample the update value according to $Pr(T_{i+1}| t_{i})$
+for each $t_{i}$
+- *Observation Update*:
+  + calculate the weight of all particles as $PR(F_{i}| T_{i})$
+  + sum the total weight
+  + if the sum is 0, reinitialize all particles;
+    else, normalize the distribution and resample from the distribution
