@@ -1,0 +1,75 @@
+###Probabilisitic Inference
+Three types of variables we will be dealing with:
+- **Query variables $Q_{i}$**: the unknown probability we are trying to compute
+- **Evidence variables $e_{i}$**: observed variables whose values are known
+- **Hidden variables**: values present in the overall joint distribution but not
+in the distribution we are currently trying to compute
+
+####Bayes Nets (Representation)
+Each node is conditionally independent of all its ancestors given all of its
+parents.
+Composition of Bays Nets:
+- a DAG, one per variable $X$
+- a conditional distribution for each node $P(X| A_{1} \dots A_{n})$, where $A_{i}$
+is the $i_{th}$ parent of $X$, stored as a conditional probability table(CPT)
+$$P(X_{1}, X_{2}, \dots, X_{n}) = \prod _{i = 1} ^{n} P(X_{i}| parents(X_{i}))$$
+
+####Bayes Nets (Inference)
+Inference is the process of calculating the joint PDF for some set of query variables
+based on some set of observed variables. We approach by **eliminating**
+variables one by one.
+To eliminate a variable $X$:
+- Joint (multiply together) all factors involving $X$
+- Sum out $X$
+
+A **factor** is defined as *unnormalized probability*.
+**Important**: Variable  elimination only improves on inference by enumeration
+if we are able to limit the size of the largest factor to a reasonable value that
+is less than the number of variable in the graph.
+
+####Bayes Nets (Sampling)
+- *Prior Sampling*
+- *Rejection Sampling*
+- *Likelihood weight*:
+  + Set all variables equal to the evidence in our query
+  + Use a weight for each sample, which is the probability of the
+evidence variables given the sampled variables
+- *Gibbs sampling*:
+  + Set all variables to some totally random value
+  + Repeatedly pick one variable at a time, clear its value, and resample it
+  given the values currently assigned to all other variables
+
+####Bayes Nets (D-Separation
+**Conditional Independence: $P(X|Y, Z) = P(X|Y)$**
+
+######Causal Graph
+$\left[X \rightarrow Y \rightarrow Z \right] \Rightarrow  X \perp\!\!\!\perp Z|Y$
+$$
+\begin{align}
+P(X|Z, y) &= \frac{P(X, Z, y)}{P(Z, y)} = \frac{P(Z|y)P(y|X)P(X)}{\sum _{x}P(X, y, Z)}
+ = \frac{P(Z|y)P(y|X)P(X)}{P(Z|y)\sum _{x}P(y|x)P(x)}\\
+ &= \frac{P(y|x)P(X)}{\sum _{x}P(y|x)P(x)} = \frac{P(y|X)P(X)}{P(y)} = P(X|y)
+\end{align}
+$$
+
+######Common Cause
+$\left[X \leftarrow Y \rightarrow Z \right] \Rightarrow X \perp\!\!\!\perp Z|Y$
+
+######Common Effect
+$\left[X \rightarrow Y \leftarrow Z \right] \Rightarrow X \perp\!\!\!\perp Z \quad
+\text{if Y is unobserved, but not conditionally independent given Y}$
+
+######D-Separation Algorithm
+*Problem*: Given a Bayes Nets $G$, two nodes $X$ and $Y$, and a (possibly empty)
+set of nodes $\{ z_{1}, \dots, z_{n} \}$ that represent observed variables, must
+the following statement be true: $X \perp\!\!\!\perp Y | \{ z_{1}, \dots, z_{n} \}$?
+
+- Shade all observed nodes $\{ z_{1}, \dots, z_{n} \}$
+- For each undirected path from $X$ to $Y$:
+  + Decompose the path into triples (segment of 3 nodes)
+  + If all triples are active (depends on whether the middle node is observed or not),
+   the path is active and d-connects $X$ to $Y$
+- If no path d-connects $X$ and $Y$, then $X$ and $Y$ are d-separated, so the statement
+is true
+ 
+![Aaron Swartz](https://github.com/YatingLi98/notes/raw/master/cs188/active_triples.png)
