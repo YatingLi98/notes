@@ -1,0 +1,54 @@
+###Machine Learning
+
+Supervised learning algorithms:
+- *training data*
+- *validation data* (or hold-out, development data): if not perform well, it's ok to go back training
+- *test set*
+
+####Naive Bayes
+$$
+\begin{align}
+prefiction(F) & = \arg \max _{y} P(Y=y|f_{1}, \dots, f_{n})\\
+& = \arg \max _{y} P(Y=y, f_{1}, \dots, f_{n}) \\
+& = \arg \max _{y} P(Y=y) \Pi _{i=1} ^{n} P(f_{i}|y)
+\end{align}
+$$
+
+####Parameter Estimation
+**maximum likelihood estimation (MLE)**:
+assumptions: each $x_{i}$ is independent, identically distributed and all possible
+values of $\theta$ with a uniform piror.
+**Likelihood**
+$$\mathscr { L } ( \theta ) = P_{\theta}(x_{1}, \dots, x_{n}) =
+\Pi _{i = 1} ^{n} P_{\theta}(x_{i}) = \Pi _{j = 1} ^{N_{y}} P(F_{i} = f_{i} ^{(j)}| y)$$
+The maximum likelihood estimate for $\theta$ is a value that satisfies:
+$\frac{\partial}{\partial \theta} \mathscr {L} (\theta) = 0$
+For Naive Bayes model with Bernoulli feature distributions, the MLE is the count
+for the outcome divided by the total number of samples for the given class.
+
+#####Smoothing
+**Laplace smoothing** with strength $k$ assumes having seen $k$ extra of each outcome.
+$$P_{MLE}(x) = \frac{count(x)}{N}$$
+$$P_{LAP, k}(x) = \frac{count(x) + k}{N + k|X|}$$
+$$P_{LAP, k}(x|y) = \frac{count(x, y) + k}{count(y) + k|X|}$$
+
+####Perceptron
+**Binary Perceptron** algorithm:
+$$
+y = \operatorname { classify } ( x ) = \left\{ \begin{array} { l l } { + 1 } &
+{ \text { if activation } _ { w } ( x ) = \mathbf { w } ^ { T }
+\mathbf { f } ( x ) > 0 } \\ { - 1 } & { \text { if activation } _ { w } ( x ) =
+\mathbf { w } ^ { T } \mathbf { f } ( x ) < 0 } \end{array} \right.
+$$
+- initialize all weight to 0
+- for each training sample:
+  + if $y = y ^{*}$, do nothing
+  + else $\mathbf{w} \leftarrow \mathbf{w} + y ^{*} \mathbf{f} (x)$
+- if you went through every training sample without updating, then terminate
+
+**Bias**: $\mathbf { w } ^ { \top } \mathbf { f } ( x ) = 0 , \mathbf { w } ,
+\mathbf { f } ( x ) \in \mathbb { R } ^ { n } \Rightarrow
+\mathbf { w } ^ { \top } \mathbf { f } ( x ) + b = 0$
+
+**Multiclass Perceptron**: have each weight vector (weight matrix) for each class, pick the one
+with highest value
