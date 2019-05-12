@@ -1,0 +1,25 @@
+###Decision Networks
+**Chance Nodes**: (ovals) Each outcome in a chance node has an associated
+probability, which can be determined by running inference on the underlying
+Bayes' net it belongs to.
+**Action Nodes**: (rectangles) Represent a choice between any of a number of
+actions which we have the power to choose from.
+**Utility Nodes**: (diamonds) Output a utility based on the values taken on by
+their parents.
+
+**Goal**: Select the action which yields the **maximum expected utility (MEU)**
+
+The expected utility of taking an action a given evidence $e$ and $n$ chance nodes:
+$$EU(a|e) = \sum _{x_{1}, \dots, x_{n}} P(x_{1}, \dots, x_{n}|e)U(a, x_{1}, \dots, x_{n})$$
+where $x_{i}$ represents a value that the $i_{th}$ chance node can take on.
+$$MEU(e) = \max _{a} EU(a|e)$$
+
+####The Value of Perfect Information (VPI)
+$$MEU(e, E^{\prime}) = \sum _{e^{\prime}} P(e^{\prime}|e) MEU(e, e^{\prime})$$
+$$\boxed {VPI(E^{\prime}, e) = MEU(e, E^{\prime}) - MEU(e)}$$
+
+#####Properties of VPI
+- **Nonnegativity**: $\forall E^{\prime}, e \quad VPI(E^{\prime}, e) \geq 0$
+- **Nonadditivity**: $VPI(E_{j}, E_{k}|e) \neq VPI(E_{j}|e) + VPI(E_{k}|e)
+\text{ in general}$
+- **Order-independence**
