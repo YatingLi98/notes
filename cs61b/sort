@@ -18,12 +18,16 @@ public class LengthComparator implements Comparator<String> {
 * Merge Sort
 * Insertion Sort
 
-| | Best Case Runtime| Worst Case Runtime| Space|
-|-|------------------|-------------------|------|
-|Selection Sort| $\Theta(N^2)$| $\Theta(N^2)$| $\Theta(1)$|
-|Heap Sort| $\Theta(N)^{*}$ | $\Theta(N log {N})$| $\Theta(1)$|
-|Merge Sort| $\Theta(N log{N})$| $\Theta(N log{N})$| $\Theta(N)$|
-|Insertion Sort| $\Theta(N)$| $\Theta(N^{2})$| $\Theta(1)$|
+| | Best Case Runtime| Worst Case Runtime| Space| Stable?|
+|-|------------------|-------------------|------|--------|
+|Selection Sort| $\Theta(N^2)$| $\Theta(N^2)$| $\Theta(1)$|   |
+|Heap Sort| $\Theta(N)^{*}$ | $\Theta(N log {N})$| $\Theta(1)$|No|
+|Merge Sort| $\Theta(N log{N})$| $\Theta(N log{N})$| $\Theta(N)$|Yes|
+|Insertion Sort| $\Theta(N)$| $\Theta(N^{2})$| $\Theta(1)$  |Yes|
+|Quick Sort| $\Theta(N \log{N})$| $\Theta (N^{2})$| $\Theta(\log{N})$  (call stack)|No|
+|Count Sort| $\Theta(N + R)$| $\Theta(N + R)$| $\Theta(N + R)$| Yes|
+|LSD Sort| $\Theta(WN + WR)$| $\Theta(WN + WR)$| $\Theta(N + R)$| Yes|
+|MSD Sort| $\Theta(N + R)$| $\Theta(WN + WR)$| $\Theta(N + WR)$| Yes|
 
 ####Selection Sort
 * *Main Idea*: Find the minimum of unsorted portion and move it to the left.
@@ -63,3 +67,46 @@ public class LengthComparator implements Comparator<String> {
 &emsp;**Import**:
 &emsp;&emsp; - On arrays with a small number of inversions, insertion sort is extremely fast. Runtime is $\Theta(N+K)$ where $K$ is the number of inversions.
 &emsp;&emsp; - For small arrays(N<15), insertion sort is fast.
+
+####Quick Sort
+- partiton on the leftmost item. That is, pick the leftmost item as pivot. All
+entries to the left of $x$ are $\leq x$ and all entries to the right of $x$ are
+$\geq x$.
+- quicksort left half and right half
+
+*Runtime*:
+Best case when pivots always land in the middle $\Rightarrow O(N \log{N})$
+Worst case when pivots always be the minimum among the unsorted part $\Rightarrow O(N^{2})$
+Randomly chosen array cases $\Rightarrow O(N \log{N})$
+
+How to avoid bad cases?
+Bad cases happen when *array is almost sorted or with a lot duplicate*.
+Shuffle before pick pivots.
+
+####Count Sort
+Create an array and copy item with key $i$ into $i$th entry of new array
+When keys are non-unique or non-numbers, decide the index by counting the number
+of each kind's occurrences
+Runtime for counting sort on N keys with alphabet of size R:
+- create an array with size $R$ to store the occurrences, memory $O(R)$ runtime $O(N)$
+- calculate the target position, runtime $O(R)$
+- copy each item into a new array, memory $O(N)$ runtime $O(N)$
+- copy items back to original array, runtime $O(N)
+In total, memory $O(N + R)$, runtime $O(N + R)$
+
+####LSD Radix Sort (Least Significant Digit)
+Sort each digit independently from rightmost digit towards left using counting sort.
+Runtime $O(W (N + R))$ where $W$ is the width of each item in digit
+
+####MSD Radix Sort (Most Significant Digit)
+Sort each digit independently from leftmost digit towards right using counting sorts.
+Key idea: Sort each subproblem separately.
+Best case: We finish in one counting sort pass, looking only at the leftmost digit
+$\Rightarrow O(N + R)$
+Worst case: We have to look at every character $\Rightarrow O(WN + WR)$
+
+
+
+
+####Property of Sort
+- Stabiliy: the order of equivalent items is preserved.
