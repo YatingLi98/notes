@@ -1,0 +1,28 @@
+###logic
+**Logical connectives**:
+- *literals*: $P$ and $\neg P$
+- *conjunction*: $A \wedge B$, $A$ and $B$ are conjuncts
+- *disjunction*: $A \vee B$, $A$ and $B$ are disjuncts
+- *implication*: $A \Rightarrow B$ is true unless $A$ is true and $B$ is false
+- *biconditional*: $A \Leftrightarrow B (A \equiv B)$ is true $iff$ both $A$ and $B$
+are true or both are false
+
+Some logical equivalences:
+$( \alpha \Rightarrow \beta ) \equiv ( \neg \beta \Rightarrow \neg \alpha )
+\quad$ contraposition
+$( \alpha \Rightarrow \beta ) \equiv ( \neg \alpha \vee \beta )
+\quad$ implication elimination
+$( \alpha \Leftrightarrow \beta ) \equiv ( ( \alpha \Rightarrow \beta ) \wedge ( \beta \Rightarrow \alpha ) )
+\quad$ biconditional elimination
+$\neg ( \alpha \wedge \beta ) \equiv ( \neg \alpha \vee \neg \beta ) \quad$ De Morgan
+$\neg ( \alpha \vee \beta ) \equiv ( \neg \alpha \wedge \neg \beta ) \quad$ De Morgan
+$( \alpha \wedge ( \beta \vee \gamma ) ) \equiv ( ( \alpha \wedge \beta ) \vee ( \alpha \wedge \gamma ) )
+\quad$ distributivity of $\wedge$ over $\vee$
+$( \alpha \vee ( \beta \wedge \gamma ) ) \equiv ( ( \alpha \vee \beta ) \wedge ( \alpha \vee \gamma ) )
+\quad$ distributivity of $\vee$ over $\wedge$
+
+**conjunctive normal form (CNF)**:
+$\left( P _ { 1 } \vee \cdots \vee P _ { i } \right) \wedge \cdots \wedge
+\left( P _ { j } \vee \cdots \vee P _ { n } \right)$
+
+$A$ **entails** $B$ ($A \models B$) if in all models that $A$ is true, $B$ is as well.  

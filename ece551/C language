@@ -1,0 +1,65 @@
+###C
+Seven steps of writing a program:
+1. work an example
+2. write down
+3. generalize the steps
+4. test the algorithm
+5. translate into code
+6. test program
+7. debug program
+
+####Compiling and Running
+Compiler: translating the human-readable code into a machine-executable format.
+Run _gcc myFile.c_ to compile and produce an executable program called _a.out_.
+Then run _./a.out_ to execute.
+The process of compiling:
+- _preprocessor_:
+ &nbsp; Combine C source file with any _header files_ it includes, as
+well as expanding any _macros_ that used
+ &nbsp; Head file includes _function prototypes, macro definitions and type declaration_
+  - Function prototypes: provides an existing function's return and parameter
+ types for compiler to check, but it has a semicolon in place of the body.
+  - Macro definitions: Advantages: easy to modify and
+  read, also being portability
+  &nbsp; ex: _#define EXIT_SUCCESS._
+  &nbsp; ex: _#define SQUARE(x) &nbsp; x * x_ the preprocessor will pass what in the
+  parentheses directly to the formula since there is no restriction on the type,
+  but if we pass a _(y - z)_, we should rewrite the formula as _((x) * (x))_ in order
+  to make things work. Also, if we pass in a function _f(i)_, _f(i)_ will be executed
+  twice
+  - Type declaration: details about different types
+- _assembly_: parse and type-checking the program, then translate the code from
+preprocessor to a lowest-level type of human-readable code
+- _assemble into an object file_: the object file contains the machine-executable
+instructions for the source file
+- _link_: combine object files, various libraries and startup code to produce the
+actual executable binary
+
+####Fixing Your Code: Testing and Debugging
+While for design methodology, we apply the _top-down_ design, _incremental_ is
+naturally a _bottom-up_ approach.
+**Black Box Testing**: consider only the expected behavior of the function
+**White Box Testing**: examines the code to devise test cases
+ &nbsp; three types of test coverage
+ - _statement coverage_: every statement in the function is executed
+ - _decision coverage_: all possible outcomes of decisions are exercised. Using
+  _control flow graph(CFG)_ to promise each arrow is covered
+ - _path coverage_: span all possible valid paths through CFG. The number of
+  paths through CFG is exponential in the number of conditional choices
+**Asserts**: check the end result and invariants
+Breakpoint: instruct the debugger to stop the execution of your program whenever
+the execution arrow is on the particular line.
+WatchPoint: stop when a particular "box" changes.
+
+####Recursion
+Head recursion: perform a computation after they make a recursive call
+Tail recursion: the recursion called is the last thing the function does before returning
+Tail call: a function caller returns immediately after the called returns
+Mutual recursion:a pair of recursions which call each other
+
+####Pointer
+The address of a variable is itself which could not be changed by the programmer.
+The _&_ symbol is a unary operand and is used before the lvalue whose value should be taken.
+_*_ is a unary operand that dereferences a pointer which gives the value of it.
+If _p_ is a pointer, then _*p_ is a lvalue.
+The memory is divided into several part. The 

@@ -1,0 +1,90 @@
+###Usage of UNIX
+The format of command prompt:
+**current_username@hostname:~$**: ~ means your home dictionary and $ means end
+symbol and indicate to enter command
+
+Some commands:
+* **whoami**: command to show the current_username
+* **man -S3 printf**: _man_ means the manual pages, _-S3_ is "optional" indicates
+that we want materials related with _printf_ in section 3, it will search from
+the beginning without _S3_
+* **man man**: shows the table of manual
+* **man -k compare**: shows everything related with _compare_
+
+
+#####Dictionary
+**absolute path**: specifies all of the dictionaries that must be traversed, starting
+at the **root** which is called **/**.
+eg. /home/drew/myfile.txt
+**current working dictionary**: a relative path starts from the current
+
+* **pwd**: printf the current working path
+* **ls -l/-a**: _-l_ print extra information about each file; _-a_ requests list
+all files including files whose name begin with a dot
+* **mkdir/rmdir arg**: creates/removes(the dictionary must be empty) a dictionary
+by the specifies name
+
+
+#####Files
+* **cat**: read one or more files, concatenates them together and prints them out
+* **more**: displays one screenfull and then wait until you press a key before displaying
+the next screenfull
+* **less**: scroll up and down with the arrow keys, and search for text
+* **head/tail**: shows just the start or the end of a file
+* **mv/cp n_args**: the first n-1 are sources and the last one is destination
+* **rm args**: delete files, and recursively delete all files and dictionary contained
+within a dictionary by giving _-r_ option
+
+
+#####Remote Login: ssh
+* Remote computer: type **ssh username@servername**, if the username is the same on both
+systems, you can omit the _username@_ part
+* Copy: user _smith_ copys a local file called _myFile_ into a directory called
+_myDir_ on a remote server called _myserver.edu_:  _**scp** myFile smith@myserver.edu:myDir/_
+
+
+###Debugger: GDB
+To compile the code with debugging symbols:
+- _-g_ to GCC: require that it include this debugging information
+- _-ggdb3_: request the maximum amount of information in a GDB-special format. If
+you compile program in multiple steps, you should include _-ggdb3_ at all steps.
+- _M-x gdb_(ECS x or ALT-x, then type gdb): run gdb in Emacs
+
+**start**: begin the program's execution. Stop the program as soon as execution
+enters main.
+**run**: run until encounter some other condition that causes it to stop.
+**step(abbreviated s)**: execute until the execution arrow moves to a different line. Step will
+go into a function called by the current line.
+**next(abbreviated n)**: advance the program one line of code. Execute the entire called function
+without stopping.
+**print(abbreviated p)**: take an expression as an argument, evaluate that expression
+and print the results.
+- Note that the side-effects of expression will affect the state of program.
+- Add _/x_ after _print_ to get the result in hexadecimal format.
+- Add _@number_ after an lvalue, GDB will print number values starting at the location you named.
+
+**display(abbreviated dis)**: take an expression as an argument and display its value every time GDB
+stops and displays a prompt.
+**backtrace**: list all frames.
+**info**: use _help info_ to see various info command
+- _info frame_: describe the memory layout of the current frame;
+- _info types_: describe the types in the current frame.
+
+**C-x C-a C-b**: set a breakpoint at the point, maybe with a condition
+  - make a breakpoint on line for the condition _i==25_: (gdb) break 7 if i==25
+  - make a breakpoint 1 be conditional: cond 1 i==25. If we write a _cond_ without
+  condition, it makes a breakpoint unconditional.
+  - we can also _enable_, _disable_ or _delete_ breakpoints by their numeric id
+  - _info breakpoints_ to see the status of current breakpoints
+
+**until**: cause a loop to execute until it finished
+**finish(fin)**: finish the current function -_i.e._
+**watch i**: cause GDB to stop whenever the value of i changes, and it will print
+both the old and new value. If the scope of a certain value _p_ ends before it changes,
+we could first use _print p_ to give it in a GDB variable(e.g., $6), and then _watch $6).
+
+**Signal**: a notification from the OS in response to certain kinds of event which lets
+GDB stop the program and give you control
+- _SIGSEGV_: indicates a segmentation fault;
+- _SIGABRT_: when your program calls _abort()_ or fail an _assert_;
+- _SIGINT_: when the program interrupted. Use C-c(C-c C-c in emacs).

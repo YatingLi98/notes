@@ -1,7 +1,7 @@
 ###Markov Models
 
 ####Mini-Forward Algorithm
-$$Pr(W_{i+1} = \sum _{w_{i}} Pr(W_{i+1}|w_{i}) Pr(w_{i}))$$
+$$Pr(W_{i+1}) = \sum _{w_{i}} Pr(W_{i+1}|w_{i}) Pr(w_{i}))$$
 
 *Stationary Distribution*: $Pr(W_{t+1}) = Pr(W_{t})$
 
@@ -56,7 +56,7 @@ for t = N to 2 do
 - *Time Elapse Update*: sample the update value according to $Pr(T_{i+1}| t_{i})$
 for each $t_{i}$
 - *Observation Update*:
-  + calculate the weight of all particles as $PR(F_{i}| T_{i})$
+  + calculate the weight of all particles as $Pr(F_{i}| T_{i})$
   + sum the total weight
   + if the sum is 0, reinitialize all particles;
     else, normalize the distribution and resample from the distribution
