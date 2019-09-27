@@ -39,8 +39,9 @@ Head recursion: perform a computation after they make a recursive call Tail recu
 The address of a variable is itself which could not be changed by the programmer. The _&_ symbol is a unary operand and is used before the lvalue whose value should be taken. _*_ is a unary operand that dereferences a pointer which gives the value of it. If _p_ is a pointer, then _*p_ is a lvalue.
 
 The high-level depiction of a program’s memory layout:
-![](https://github.com/YatingLi98/notes/raw/master/ece551/layout.png)
-![](https://github.com/YatingLi98/notes/raw/master/ece551/example_of_memory.png) The **stack** stores the local variables declared by each function. The stack is divided into stack frames which start when the function is called and last until it returns. The **return address** is the address of the instruction that should be executed after the function being called completes and returns.
+![](https://github.com/YatingLi98/notes/raw/master/ece551/layout.png =300x300)
+![](https://github.com/YatingLi98/notes/raw/master/ece551/example_of_memory.png =300x300)
+The **stack** stores the local variables declared by each function. The stack is divided into stack frames which start when the function is called and last until it returns. The **return address** is the address of the instruction that should be executed after the function being called completes and returns.
 
 **NULL**: a flat-headed arrow. By not having any valid portion of the program placed at address 0, we can be sure that nothing will be placed at address 0\. This means that no properly initialized pointer that actually points to something would ever have the value NULL. The attempt of following the arrow will lead to crash with a _segmentation fault_ (attempt to access memory in an invalid way).
 
@@ -150,17 +151,18 @@ Do not write a specific number of bytes:
 - portability, the ability to compile and work on a different system
 - maintainability
 If there is not emough space to fulfill the request, _malloc_will return _NULL_. It is better to check it before using.
-
+**calloc**: zeroes out the region in memory while _malloc_ does nothing to initialize the memory.
 Only copy the pointer, two pointers point at the same location.
 ```C
 polygon_t *p2 = p1;
-
 ```
+
 Copy each field of *p1 into *p2, if *p1 has a array, then *p2 will have a array points at the same location. If we free *p1->points, then *p2->points will become a dangling pointer.
 ```C
 polygon_t *p2 = malloc(sizeof(*p2));
 *p2 = *p1;
 ```
+
 Deep copy
 ```C
 polygon_t * p2 = malloc(sizeof(*p2));
@@ -170,3 +172,22 @@ for (int i = 0; i < p1->num_points; i++) {
   p2->points[i] = p1->points[i];
 }
 ```
+![](https://github.com/YatingLi98/notes/raw/master/ece551/copy_pointer.png =200x200)
+![](https://github.com/YatingLi98/notes/raw/master/ece551/shallow_copy.png =200x200)
+![](https://github.com/YatingLi98/notes/raw/master/ece551/deep_copy.png =200x200)
+
+#####free
+`void free(void * ptr);`
+- _ptr_ could only be pointers that were returned by malloc
+- a block of memory can't be freed twice
+- can't free memory not in the heap
+
+If _ptr_ is _NULL_, then nothing happens.
+**Memory leaks**: lose all references to a block of memory, and the memory still allocated.
+
+#####realloc
+`void * realloc(void * ptr, size_t size)`
+
+#####getline
+`ssize_t getline(char ** line_write_into, size_t * size_malloc, FILE * f);`
+Read a single line from the _f_ until it sees '\n', then place a '\0'. It returns _-1_ on an error(including end of error), and the number of bytes read on success. If _*line-write-into_ is _NULL_, it will perform a _malloc_.
