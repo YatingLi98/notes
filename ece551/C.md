@@ -10,7 +10,7 @@ Seven steps of writing a program:
 6.  test program
 7.  debug program
 
-### Compiling and Running
+### 5. Compiling and Running
 
 Compiler: translating the human-readable code into a machine-executable format. Run _gcc myFile.c_ to compile and produce an executable program called _a.out_. Then run _./a.out_ to execute. The process of compiling:
 
@@ -22,7 +22,7 @@ Compiler: translating the human-readable code into a machine-executable format. 
 *   _assemble into an object file_: the object file contains the machine-executable instructions for the source file
 *   _link_: combine object files, various libraries and startup code to produce the actual executable binary
 
-### Fixing Your Code: Testing and Debugging
+### 6. Fixing Your Code: Testing and Debugging
 
 While for design methodology, we apply the _top-down_ design, _incremental_ is naturally a _bottom-up_ approach. **Black Box Testing**: consider only the expected behavior of the function **White Box Testing**: examines the code to devise test cases   three types of test coverage
 
@@ -30,11 +30,11 @@ While for design methodology, we apply the _top-down_ design, _incremental_ is n
 *   _decision coverage_: all possible outcomes of decisions are exercised. Using _control flow graph(CFG)_ to promise each arrow is covered
 *   _path coverage_: span all possible valid paths through CFG. The number of paths through CFG is exponential in the number of conditional choices **Asserts**: check the end result and invariants Breakpoint: instruct the debugger to stop the execution of your program whenever the execution arrow is on the particular line. WatchPoint: stop when a particular “box” changes.
 
-### Recursion
+### 7. Recursion
 
 Head recursion: perform a computation after they make a recursive call Tail recursion: the recursion called is the last thing the function does before returning Tail call: a function caller returns immediately after the called returns Mutual recursion:a pair of recursions which call each other
 
-### Pointer
+### 8. Pointer
 
 The address of a variable is itself which could not be changed by the programmer. The _&_ symbol is a unary operand and is used before the lvalue whose value should be taken. _*_ is a unary operand that dereferences a pointer which gives the value of it. If _p_ is a pointer, then _*p_ is a lvalue.
 
@@ -65,7 +65,7 @@ ADD CODE
 
 We declare that y is a constant, which means &y has the type const int *. However, assign &y to q which could be used to change *p. Thus, it causes an error. When a box has multiple names, we could say one name **aliases** another. **memory checker tools**: Valgrind and/or -fsanitize=address
 
-### Arrays
+### 9. Arrays
 
 *   `int myArray[4];` _myArray_ is a pointer points to the first box in the array instead of lvalue. The size can also be a previously declared variable. Three cases that an array can be used without array-to-pointer decay occuring:
     *   _myArray_ and _&myArray_ evaluate to the same numerical value but with different types. _myArray_ will evaluate to a pointer to an int while _&myArray_ will evaluate to a pointer to 4 ints
@@ -78,7 +78,7 @@ We declare that y is a constant, which means &y has the type const int *. Howeve
 
 **size_t**: unsigned int with the right number of bits to describe the size or index of an array
 
-### Uses of Pointers
+### 10. Uses of Pointers
 
 #### Strings
 
@@ -139,9 +139,68 @@ ADD CODE
 
 -Format string attacks:
 
-### Interacting with the User and System
+### 11. Interacting with the User and System
+####Operating System
+In order to interact with "the world", the program will ask _operating system_ (low-level software responsible for mangaging all resources on the system for all programs) to access hardware devices.
+Program makes a _system call_. The OS checks whether it's within the bounds of its permissions before performing it.
+**errno**: it is a global variable set up by a failing call and read if your program wants more information about why the call failed.
+**perror**: prints a descriptive error message based on the current value of errno. It takes on argument: a string it prints before its descriptive message.
+**Note that you can't call anything that might change _errno_ before you test it or call _perror_.** Because _errno_ is global, which means that there is only one _errno_ for the entire program.
+```C
+//Broken Code
+int x = someSystemCall();
+if (x!= 0) {
+  printf("someSystemCall() failed!\n"); \\the printf might change errno
+  perror("The error was: ");
+}
+```
+####Comment Line Arguments
+```C
+int main (int argc, char ** argv) {
+  //code
+}
+```
+_argc_ is the count of how many command line arguments passed in
+_argv_ is an array of string contains the arguments passed in. _argv[0]_ contains the program name. If you write _./a.out_, then _argv[0]_ is "./a.out\0".
+**getopt**: a part of C library and parses the commend line arguments
+**char ** envp**: _main_ can potentially take a third argument which is a pointer to an array of strings containing the value of environment variables. You can access the environment variables with functions: _getenv, setenv, putenv and unsetenv_.
+11.2.3 process creation
 
-###Dynamic Allocation
+####Files
+`FILE * fopen(const char * filename, const char * mode);`
+- `FILE * f = fopen("/home/drew/example.txt", "r");`
+The _filename_ is a string, which must be null-terminated and is the pathname of the file to open. You should always check the return value to see if it is _NULL_ or a valid stream.
+- `int fclose(FILE * stream);`
+
+|Mode|read and/or write|Does not exit?|Trunate?|Position|
+|----|-----------------|--------------|--------|--------|
+|r| read only| fails| no| beginning|
+|r+| read/write| fails| no| beginning|
+|w| write only| created| yes| beginning|
+|w+| read/write| created| yes| beginning|
+|a| writing| created| no| end|
+|a+| read/write| created| no| end|
+
+Trunate: whether or not the exiting contents of the file are discarded
+Position: where the accesses start
+
+#####Reading files
+- `int fgetc(FILE * stream);`
+  + it returns _int_ so that it can return all possible _chars_, plus a distict value to indicate that the end of file(**EOF**) has been reached;
+  + on most system, _EOF_ is -1, so we can't distinguish between reading the character number 255 and the end of file
+-  `char * fgets(char * str, int size, FILE * stream);`
+  If you need to distinguish between an error and end-of-file, you should use _feof_ and/or _ferror_functions.
+- `size_t fread(void * ptr, size_t size, size_t nitems, FILE * stream);` read non-textual data from a file. Return the number of items successfully read.
+- _fscanf_: stop reading input as soon as it encounters something that does not match the requested format
+
+#####Writing files
+- _fprintf_, similar with _printf_ except that it takes an additional argument _FILE * f_ specifying where to write the output
+- `size_t fwrite(const void * ptr, size_t size, size_t nitems, FILE * stream);`
+-
+
+
+
+### 12. Dynamic Allocation
 Dynamic memory alloction allows a programmer to request a specfic amount memory to be allocated on the **heap**, so it willed not be freed when the function returns (as those in stack). The upper boundary of the heap can increase if there is not enough free blocks of memory.
 
 '#include <stdlib.h>'
@@ -191,3 +250,17 @@ If _ptr_ is _NULL_, then nothing happens.
 #####getline
 `ssize_t getline(char ** line_write_into, size_t * size_malloc, FILE * f);`
 Read a single line from the _f_ until it sees '\n', then place a '\0'. It returns _-1_ on an error(including end of error), and the number of bytes read on success. If _*line-write-into_ is _NULL_, it will perform a _malloc_.
+
+###13. Programming in the Large
+- Abstraction:
+Abstraction is the separation of interface from inplementation. The _interface_ is what it does, while the implementation is how to do it.
+- Readability:
+  + function size
+  + naming: the length of a variable's name should be proportional to the size of its scope, and the complexity of its use
+  + formatting
+  + commenting and documentation
+    - document large-scale design
+    - describe each component
+    - do not comment the obvious
+    - explain the unexpected
+- Work in teas: pair programming

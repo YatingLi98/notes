@@ -35,6 +35,68 @@ the next screenfull
 * **rm args**: delete files, and recursively delete all files and dictionary contained
 within a dictionary by giving _-r_ option
 
+#####Pattern Expansion: Globbing and Braces
+_globbing_: patterns that expand to multiple arguments based on the files name in the current dictionary
+  + *: _rm *~_ the pattern *~ matches any file name in the current dictionary whose name ends with ~.
+  + ?: matches any one character
+  + [...] or [!...]: _file0[123].txt_ will match _file01.txt file02.txt file03.txt_
+  + if you want to use one of the special characters literally. For example, use * to mean character *,
+  you use _escape_ character to remove its special meaning. _rm \*_ will remove exactly the file named *,
+  while _rm *_ will remove all files.
+
+_brace expansion_: take a list of comma-separated choices in curly braces, and replace the surround
+argument with one version for each item in the list
+  + file{abc, xyz, 123}.txt $\Rightarrow$ fileabc.txt, filexyz.txt, file123.txt
+  + {a, b}{1, 2, 3} $\Rightarrow$ {a1, a2, a3, b1, b2, b3}
+  + apply to remote computer, since we may do not want to expand based on local file name
+
+#####Redirection and Pipes
+When we run program under UNIX, we have access to _stdin, stdout, stderr_ by default.
+- stdin: read for input from typing at the terminal
+- stdout: write output to the terminal except error
+-stderr: write error-related output to the terminal
+
+**_Redirecting_** the input or output means that instead of the program reading from/writing to the terminal,
+it will read/write the file you request.
++ "<" for input and ">" for output: ./program < file1.txt > output.txt
++ ">>" redirect the output to a file, but append to the original contents instead of erasing it.
++"here document" <<: _commend << EOF_ you could type multiple lines as input and end up with other EOF
+
+**_pipes_**: A pipe connects the output of one program to the input of another program
+_diff x.c y.c | less_: runs _diff x.c y.c_ which prints the different between the two files and then pass it as
+the input to _less_ which allows you to scroll it. The two process run at the same time. It is also ok when there
+are multiple inputs.
+
+#####Search
+- _grep_: _grep myFunction *.c_ search all files ending with _.c_ for _myFunction_
+- _find_: _find . -name "pattern" -print_
+
+#####Commend Shell
+```bash
+#!/full_path/bash         # # is comment(read as "pound" or "hash")
+                          #! read as "bang"
+for i in `find . -name \*.c`  #find all .c files in curr and sub dict
+  do                          #replace the `` expression with the output
+    echo "Current file is $i"   #add $ before variable
+  done
+
+for file in *_*  #find all files with _ in name
+  do
+    mv $file `echo $file | tr _ -` #replace _ with -
+  done
+```
+
+#####Environment Variables
+- _PATH_: specify where the shell should look for programs to execute
+- _IFS_: control how the shell divides input up into fields. (IFS=$' ')
+
+**Note**
+- Most variables are local to the shell and will not be passed down to programs.
+You could _export_: _export myVar = "hi"_
+- _getenv_: to read environment variable. Take the name and return the value.
+You can also declare main to take a third argument _char ** envp_ which is a
+pointer to an array of strings containing the environment variable.
+
 
 #####Remote Login: ssh
 * Remote computer: type **ssh username@servername**, if the username is the same on both
